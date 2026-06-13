@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruckHub Manager - ETS2 & ATS Speditions-Tool</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- ========== LANDING PAGE ========== -->
+    <div id="landing-page">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-truck-moving"></i>
+                <span>TruckHub Manager</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <button class="btn-login" onclick="showLoginModal()">
+                    <i class="fas fa-sign-in-alt"></i> Einloggen
+                </button>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>🚛 TruckHub Manager</h1>
+                <p class="subtitle">Das ultimative Speditions-Management-Tool für</p>
+                <div class="game-badges">
+                    <span class="badge ets2">Euro Truck Simulator 2</span>
+                    <span class="badge ats">American Truck Simulator</span>
+                </div>
+                <p class="description">
+                    Erstelle deine Spedition, stelle Fahrer ein, vergebe Aufträge 
+                    und behalte den Überblick!
+                </p>
+                <button class="btn-cta" onclick="showLoginModal()">
+                    🚀 Jetzt kostenlos starten
+                </button>
+                <div class="truck-animation">🚛💨</div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2>⭐ Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-building"></i>
+                    <h3>Spedition verwalten</h3>
+                    <p>Erstelle und verwalte deine eigene Spedition</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Fahrer einstellen</h3>
+                    <p>Rekrutiere Fahrer und weise ihnen Rollen zu</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>Auftrags-System</h3>
+                    <p>Erstelle, vergebe und tracke Aufträge</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Übersicht</h3>
+                    <p>Sieh wer wie viel noch fahren muss</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Rollen-System</h3>
+                    <p>CEO, Disponent, Fahrer und mehr</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <h3>Multi-Login</h3>
+                    <p>Login via Twitch, Discord & Steam</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========== LOGIN MODAL ========== -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content login-box">
+            <button class="modal-close" onclick="hideLoginModal()">✕</button>
+            <h2>🔐 Einloggen</h2>
+            <p>Wähle deinen Login-Anbieter:</p>
+            <div class="login-buttons">
+                <button class="btn-discord" onclick="loginWith('discord')">
+                    <i class="fab fa-discord"></i> Mit Discord einloggen
+                </button>
+                <button class="btn-twitch" onclick="loginWith('twitch')">
+                    <i class="fab fa-twitch"></i> Mit Twitch einloggen
+                </button>
+                <button class="btn-steam" onclick="loginWith('steam')">
+                    <i class="fab fa-steam"></i> Mit Steam einloggen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== DASHBOARD ========== -->
+    <div id="dashboard" class="hidden">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-truck-moving"></i>
+                <span>TruckHub</span>
+            </div>
+            <div class="user-info">
+                <img id="user-avatar" src="" alt="Avatar">
+                <span id="user-name">Username</span>
+                <span id="user-role" class="role-badge">Fahrer</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="active" onclick="showSection('overview', event)">
+                    <i class="fas fa-home"></i> <span>Übersicht</span>
+                </a>
+                <a href="#" onclick="showSection('spedition', event)">
+                    <i class="fas fa-building"></i> <span>Spedition</span>
+                </a>
+                <a href="#" onclick="showSection('drivers', event)">
+                    <i class="fas fa-users"></i> <span>Fahrer</span>
+                </a>
+                <a href="#" onclick="showSection('jobs', event)">
+                    <i class="fas fa-clipboard-list"></i> <span>Aufträge</span>
+                </a>
+                <a href="#" onclick="showSection('roles', event)">
+                    <i class="fas fa-shield-alt"></i> <span>Rollen</span>
+                </a>
+                <a href="#" onclick="showSection('stats', event)">
+                    <i class="fas fa-chart-bar"></i> <span>Statistiken</span>
+                </a>
+            </nav>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> <span>Ausloggen</span>
+            </button>
+        </div>
+
+        <div class="main-content">
+            <div class="topbar">
+                <h2 id="page-title">📊 Übersicht</h2>
+                <div class="game-selector">
+                    <select id="game-select" onchange="switchGame(this.value)">
+                        <option value="ets2">🇪🇺 Euro Truck Simulator 2</option>
+                        <option value="ats">🇺🇸 American Truck Simulator</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Übersicht -->
+            <div id="section-overview" class="section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-road"></i>
+                        <div class="stat-info">
+                            <h3 id="stat-km-remaining">0 km</h3>
+                            <p>Noch zu fahren</p>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" id="km-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clipboard-check"></i>
+                        <div class="stat-info">
+                            <h3 id="stat-jobs-open">0</h3>
+                            <p>Offene Aufträge</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div class="stat-info">
+                            <h3 id="stat-drivers">0</h3>
+                            <p>Aktive Fahrer</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-euro-sign"></i>
+                        <div class="stat-info">
+                            <h3 id="stat-revenue">€ 0</h3>
+                            <p>Gesamtumsatz</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏁 Fahrer-Fortschritt</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Fahrer</th>
+                                <th>Rolle</th>
+                                <th>Gefahren</th>
+                                <th>Ziel</th>
+                                <th>Verbleibend</th>
+                                <th>Fortschritt</th>
+                            </tr>
+                        </thead>
+                        <tbody id="driver-progress-table"></tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Letzte Aktivitäten</h3>
+                    <div id="activity-feed"></div>
+                </div>
+            </div>
+
+            <!-- Spedition -->
+            <div id="section-spedition" class="section hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🏢 Speditions-Verwaltung</h3>
+                        <button class="btn-primary" onclick="showCreateSpedition()">
+                            <i class="fas fa-plus"></i> Neue Spedition
+                        </button>
+                    </div>
+                    <div id="create-spedition-form" class="form-section hidden">
+                        <h4>Neue Spedition erstellen</h4>
+                        <div class="form-group">
+                            <label>Speditions-Name</label>
+                            <input type="text" id="spedition-name" placeholder="z.B. TransEuropa GmbH">
+                        </div>
+                        <div class="form-group">
+                            <label>Spiel</label>
+                            <select id="spedition-game">
+                                <option value="ets2">Euro Truck Simulator 2</option>
+                                <option value="ats">American Truck Simulator</option>
+                                <option value="both">Beide Spiele</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Beschreibung</label>
+                            <textarea id="spedition-desc" placeholder="Beschreibe deine Spedition..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Mindest-Kilometer pro Woche</label>
+                            <input type="number" id="spedition-min-km" value="2000">
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-primary" onclick="createSpedition()">✅ Erstellen</button>
+                            <button class="btn-secondary" onclick="hideCreateSpedition()">Abbrechen</button>
+                        </div>
+                    </div>
+                    <div id="spedition-list"></div>
+                </div>
+            </div>
+
+            <!-- Fahrer -->
+            <div id="section-drivers" class="section hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>👥 Fahrer-Verwaltung</h3>
+                        <button class="btn-primary" onclick="showAddDriver()">
+                            <i class="fas fa-user-plus"></i> Fahrer einladen
+                        </button>
+                    </div>
+                    <div id="add-driver-form" class="form-section hidden">
+                        <h4>Fahrer einladen</h4>
+                        <div class="form-group">
+                            <label>Benutzername</label>
+                            <input type="text" id="driver-username" placeholder="Username">
+                        </div>
+                        <div class="form-group">
+                            <label>Rolle</label>
+                            <select id="driver-role">
+                                <option value="fahrer">🚛 Fahrer</option>
+                                <option value="erfahrener_fahrer">⭐ Erfahrener Fahrer</option>
+                                <option value="disponent">📋 Disponent</option>
+                                <option value="manager">👔 Manager</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Wochen-Ziel (km)</label>
+                            <input type="number" id="driver-km-goal" value="2000">
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-primary" onclick="addDriver()">✅ Hinzufügen</button>
+                            <button class="btn-secondary" onclick="hideAddDriver()">Abbrechen</button>
+                        </div>
+                    </div>
+                    <div id="drivers-list"></div>
+                </div>
+            </div>
+
+            <!-- Aufträge -->
+            <div id="section-jobs" class="section hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📦 Auftrags-System</h3>
+                        <button class="btn-primary" onclick="showCreateJob()">
+                            <i class="fas fa-plus"></i> Neuer Auftrag
+                        </button>
+                    </div>
+                    <div id="create-job-form" class="form-section hidden">
+                        <h4>Neuen Auftrag erstellen</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Startort</label>
+                                <input type="text" id="job-start" placeholder="Berlin">
+                            </div>
+                            <div class="form-group">
+                                <label>Zielort</label>
+                                <input type="text" id="job-end" placeholder="Paris">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Fracht</label>
+                                <input type="text" id="job-cargo" placeholder="Elektronik">
+                            </div>
+                            <div class="form-group">
+                                <label>Distanz (km)</label>
+                                <input type="number" id="job-distance">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Vergütung (€)</label>
+                                <input type="number" id="job-pay">
+                            </div>
+                            <div class="form-group">
+                                <label>Fahrer</label>
+                                <select id="job-driver">
+                                    <option value="">-- Wählen --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Priorität</label>
+                            <select id="job-priority">
+                                <option value="low">🟢 Niedrig</option>
+                                <option value="medium">🟡 Mittel</option>
+                                <option value="high">🔴 Hoch</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-primary" onclick="createJob()">✅ Erstellen</button>
+                            <button class="btn-secondary" onclick="hideCreateJob()">Abbrechen</button>
+                        </div>
+                    </div>
+                    <div class="filter-bar">
+                        <button class="filter-btn active" onclick="filterJobs('all', event)">Alle</button>
+                        <button class="filter-btn" onclick="filterJobs('open', event)">🟢 Offen</button>
+                        <button class="filter-btn" onclick="filterJobs('progress', event)">🟡 Aktiv</button>
+                        <button class="filter-btn" onclick="filterJobs('done', event)">✅ Erledigt</button>
+                    </div>
+                    <div id="jobs-list"></div>
+                </div>
+            </div>
+
+            <!-- Rollen -->
+            <div id="section-roles" class="section hidden">
+                <div class="card">
+                    <h3>🛡️ Rollen-Verwaltung</h3>
+                    <div class="roles-grid">
+                        <div class="role-card role-ceo">
+                            <h4>👑 CEO</h4>
+                            <ul>
+                                <li>✅ Alle Rechte</li>
+                                <li>✅ Spedition löschen</li>
+                                <li>✅ Rollen vergeben</li>
+                            </ul>
+                        </div>
+                        <div class="role-card role-manager">
+                            <h4>👔 Manager</h4>
+                            <ul>
+                                <li>✅ Fahrer einstellen</li>
+                                <li>✅ Aufträge erstellen</li>
+                                <li>✅ Rollen vergeben</li>
+                            </ul>
+                        </div>
+                        <div class="role-card role-disponent">
+                            <h4>📋 Disponent</h4>
+                            <ul>
+                                <li>✅ Aufträge erstellen</li>
+                                <li>✅ Aufträge zuweisen</li>
+                            </ul>
+                        </div>
+                        <div class="role-card role-senior">
+                            <h4>⭐ Erfahrener Fahrer</h4>
+                            <ul>
+                                <li>✅ Aufträge annehmen</li>
+                                <li>✅ Mentor sein</li>
+                            </ul>
+                        </div>
+                        <div class="role-card role-driver">
+                            <h4>🚛 Fahrer</h4>
+                            <ul>
+                                <li>✅ Aufträge annehmen</li>
+                                <li>✅ Aufträge abschließen</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistiken -->
+            <div id="section-stats" class="section hidden">
+                <div class="card">
+                    <h3>📊 Statistiken</h3>
+                    <div id="stats-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
